@@ -136,7 +136,7 @@ void clearConfig()
 
 void rebind_keys(int gamepad_ind)
 {
-    if (tmp_shmem_mem.controllers[gamepad_ind].unk_1[0] == 0)
+    if (tmp_shmem_mem.controllers[gamepad_ind].unk_2[0] == 0)
     {
         return;
     }
@@ -212,15 +212,15 @@ int apply_fake_gamepad(struct input_msg msg)
     int gamepad;
     for (gamepad = CONTROLLER_PLAYER_1; gamepad <= CONTROLLER_PLAYER_8; gamepad++)
     {
-        if (tmp_shmem_mem.controllers[gamepad].unk_1[0] == 0)
+        if (tmp_shmem_mem.controllers[gamepad].unk_2[0] == 0)
             break;
     }
 
-    memset(tmp_shmem_mem.controllers[gamepad].unk_1, 0, 0x40);
+    memset(tmp_shmem_mem.controllers[gamepad].unk_2, 0, 0x40);
     memset(&tmp_shmem_mem.controllers[gamepad].header, 0, sizeof(HidControllerHeader));
 
     // Pro controller magic
-    tmp_shmem_mem.controllers[gamepad].unk_1[0] = 0x01;
+    tmp_shmem_mem.controllers[gamepad].unk_2[0] = 0x01;
 
     tmp_shmem_mem.controllers[gamepad].header.singleColorBody = 0;
     tmp_shmem_mem.controllers[gamepad].header.singleColorButtons = 0xFFFFFFFF;
@@ -258,7 +258,7 @@ void shmem_copy(HidSharedMemory *source, HidSharedMemory *dest)
     for (int i = 0; i < 10; i++)
     {
         // Only copy used gamepads
-        if (dest->controllers[i].unk_1[0] != 0 || source->controllers[i].unk_1[0] != 0)
+        if (dest->controllers[i].unk_2[0] != 0 || source->controllers[i].unk_2[0] != 0)
             memcpy(&dest->controllers[i], &source->controllers[i], sizeof(source->controllers[i]) - sizeof(source->controllers[i].unk_2)); // unk_2 is apparently unused and is huge
     }
 }
